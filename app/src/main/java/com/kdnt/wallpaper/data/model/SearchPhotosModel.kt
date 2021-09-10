@@ -6,7 +6,7 @@ data class SearchPhotosModel(
     @SerializedName("total_results") val total_results : Int,
     @SerializedName("page") val page : Int,
     @SerializedName("per_page") val per_page : Int,
-    @SerializedName("photos") val photos : ArrayList<PhotoModel>,
+    @SerializedName("photos") val photos : MutableList<PhotoModel>,
     @SerializedName("prev_page") val prev_page : String,
     @SerializedName("next_page") val next_page : String
 )

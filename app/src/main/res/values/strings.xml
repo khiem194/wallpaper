@@ -3,4 +3,7 @@
     <string name="wallpaper_loading">loading....</string>
     <string name="this_action">Khiem Do</string>
     <string name="powered_by_kdnt">com.kdnt.wallpaper</string>
+    <string name="set_wallpaper">Set wallpaper</string>
+    <string name="nature">Nature</string>
+    <string name="trending">Trending</string>
 </resources>

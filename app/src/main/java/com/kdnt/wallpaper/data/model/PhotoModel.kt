@@ -1,7 +1,12 @@
 package com.kdnt.wallpaper.data.model
 
+import android.net.Uri
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import java.net.URI
 
+@Parcelize
 data class PhotoModel(
     @SerializedName("id") val id : Int,
     @SerializedName("width") val width : Int,
@@ -13,4 +18,4 @@ data class PhotoModel(
     @SerializedName("avg_color") val avg_color : String,
     @SerializedName("src") val src : SourceModel,
     @SerializedName("liked") val liked : Boolean
-)
+) : Parcelable
