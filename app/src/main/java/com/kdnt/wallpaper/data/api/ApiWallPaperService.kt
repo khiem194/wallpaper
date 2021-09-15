@@ -13,7 +13,7 @@ interface ApiWallPaperService {
     @Headers("Authorization: $KEY_API")
     @GET("curated")
     fun getListPhoto(
-        @Query("page") page : Int = Random.nextInt(100),
+        @Query("page") page : Int,
         @Query("per_page") per_page : Int = 100,
     ) : Observable<CuratedPhotosModel>
 

@@ -14,16 +14,17 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : BaseViewModel() {
     init {
-        getListPhoto()
+        getListPhoto(0)
     }
+
     private val mListPhotoData: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
     fun getListPhotoLiveData() = mListPhotoData
 
-    private fun getListPhoto() {
+     fun getListPhoto(page : Int) {
         GlobalScope.launch {
-            wallPaperRepository.getListPhoto()
+            wallPaperRepository.getListPhoto(page)
                 .subscribeOn(Schedulers.io())
-                .subscribe{
+                .subscribe {
                     val listPhotosModel = it.photos
                     mListPhotoData.postValue(listPhotosModel)
                     Log.d("----", it.photos.toString())
@@ -31,11 +32,12 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
         }
     }
 
-    fun searchListPhoto(name : String){
+
+    fun searchListPhoto(name: String) {
         GlobalScope.launch {
             wallPaperRepository.searchListPhoto(name)
                 .subscribeOn(Schedulers.io())
-                .subscribe{
+                .subscribe {
                     val searchListPhoto = it.photos
                     mListPhotoData.postValue(searchListPhoto)
                     Log.d("----", it.photos.toString())

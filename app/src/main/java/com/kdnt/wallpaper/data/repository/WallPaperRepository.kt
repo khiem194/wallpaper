@@ -6,6 +6,6 @@ import com.kdnt.wallpaper.data.model.SearchPhotosModel
 import io.reactivex.Observable
 
 class WallPaperRepository(private val apiWallPaperService: ApiWallPaperService) {
-    fun getListPhoto(): Observable<CuratedPhotosModel> = apiWallPaperService.getListPhoto()
+    fun getListPhoto(page : Int): Observable<CuratedPhotosModel> = apiWallPaperService.getListPhoto(page)
     fun searchListPhoto(name : String) : Observable<SearchPhotosModel> = apiWallPaperService.searchListPhoto(name)
 }

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.kdnt.wallpaper.data.model.PhotoModel
+import com.kdnt.wallpaper.databinding.ItemLoadingBinding
 import com.kdnt.wallpaper.databinding.ItemWallpaperBinding
 
 
@@ -15,6 +16,11 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
 
     fun setData(list: MutableList<PhotoModel>) {
         mListPhoto.clear()
+        mListPhoto.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun updateData(list: MutableList<PhotoModel>) {
         mListPhoto.addAll(list)
         notifyDataSetChanged()
     }
