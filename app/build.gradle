@@ -25,7 +25,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        setArchivesBaseName("magnifier" + "-" + versionName + "-" + versionCode)
+        setArchivesBaseName("wallpaper" + "-" + versionName + "-" + versionCode)
     }
 
     buildTypes {

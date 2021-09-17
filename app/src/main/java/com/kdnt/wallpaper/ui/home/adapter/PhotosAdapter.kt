@@ -15,7 +15,7 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
     var onClickItemPhotoModel: ((photoModel : PhotoModel) -> Unit)? = null
 
     fun setData(list: MutableList<PhotoModel>) {
-        mListPhoto.clear()
+//        mListPhoto.clear()
         mListPhoto.addAll(list)
         notifyDataSetChanged()
     }

@@ -11,16 +11,32 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.random.Random
 
 class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : BaseViewModel() {
     init {
-        getListPhoto(0)
+        getListPhoto(1)
     }
 
     private val mListPhotoData: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
     fun getListPhotoLiveData() = mListPhotoData
+    private val mLoadMoreData: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
+    fun getListPhotoLoadMoreLiveData() = mLoadMoreData
 
-     fun getListPhoto(page : Int) {
+     private fun getListPhoto(page : Int) {
+        GlobalScope.launch {
+            wallPaperRepository.getListPhoto(page)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    val listPhotosModel = it.photos
+                    mListPhotoData.postValue(listPhotosModel)
+                    Log.d("----", it.photos.toString())
+                }
+        }
+    }
+
+     fun loadMoreData(page : Int){
         GlobalScope.launch {
             wallPaperRepository.getListPhoto(page)
                 .subscribeOn(Schedulers.io())
@@ -38,8 +54,8 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
             wallPaperRepository.searchListPhoto(name)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
-                    val searchListPhoto = it.photos
-                    mListPhotoData.postValue(searchListPhoto)
+                    val loadMorePhoto = it.photos
+                    mLoadMoreData.postValue(loadMorePhoto)
                     Log.d("----", it.photos.toString())
                 }
         }

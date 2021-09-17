@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kdnt.wallpaper.R
@@ -12,6 +14,8 @@ import com.kdnt.wallpaper.WallpaperUtils
 import com.kdnt.wallpaper.core.base.BaseActivity
 import com.kdnt.wallpaper.data.model.PhotoModel
 import com.kdnt.wallpaper.databinding.ActivityHomeBinding
+import com.kdnt.wallpaper.ui.download.DownloadActivity
+import com.kdnt.wallpaper.ui.favourites.FavouritesActivity
 import com.kdnt.wallpaper.ui.home.adapter.PhotosAdapter
 import com.kdnt.wallpaper.ui.setwallpaper.SetWallpaperActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,11 +23,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
     private lateinit var mAdapter: PhotosAdapter
     private lateinit var gridLayoutManager: GridLayoutManager
-    private var mListPhoto = mutableListOf<PhotoModel>()
     private var currentItems = 0
     private var scrollOutItem = 0
     private var totalItemCount = 0
+    private var page = 1
     private var loading = false
+    private lateinit var toggle : ActionBarDrawerToggle
 
     companion object {
         fun openActivity(context: Context): Intent = Intent(context, HomeActivity::class.java)
@@ -34,6 +39,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
     override val mViewModel: HomeViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupDrawerLayout()
         gridLayoutManager = GridLayoutManager(this, 3)
         mViewBinding.rcvPhotos.layoutManager = gridLayoutManager
         mAdapter = PhotosAdapter()
@@ -44,13 +50,31 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         })
         mAdapter.onClickItemPhotoModel = this::gotoSetupWallpaperActivity
         initScroll()
-        mViewBinding.btnNature.setOnClickListener {
-            searchListPhoto(getString(R.string.nature))
-        }
+    }
 
-        mViewBinding.btnTrending.setOnClickListener {
-            searchListPhoto(getString(R.string.trending))
+    private fun setupDrawerLayout() {
+        toggle = ActionBarDrawerToggle(this, mViewBinding.drawerLayout, R.string.Open, R.string.Close)
+        mViewBinding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        mViewBinding.navDrawer.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.favourites -> startActivity(FavouritesActivity.openActivity(this))
+                R.id.download -> startActivity(DownloadActivity.openActivity(this))
+                R.id.theme -> Toast.makeText(this, R.string.theme, Toast.LENGTH_SHORT).show()
+                R.id.setting -> Toast.makeText(this, R.string.setting, Toast.LENGTH_SHORT).show()
+                R.id.rate_us -> Toast.makeText(this, R.string.rate_us, Toast.LENGTH_SHORT).show()
+                R.id.share -> Toast.makeText(this, R.string.share, Toast.LENGTH_SHORT).show()
+            }
+            true
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)){
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initScroll() {
@@ -67,10 +91,9 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
                 scrollOutItem = gridLayoutManager.findFirstVisibleItemPosition()
                 if (loading && (currentItems + scrollOutItem == totalItemCount)) {
                     loading = false
-                    mViewModel.searchListPhoto("sport")
-                    mViewModel.getListPhotoLiveData().observe(this@HomeActivity, {
-                        mAdapter.updateData(it)
-                    })
+                    page += 1
+                    mViewModel.loadMoreData(page)
+                    Log.d("---b", (page).toString())
                 }
             }
         })
