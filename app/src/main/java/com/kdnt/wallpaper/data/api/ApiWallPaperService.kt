@@ -14,14 +14,14 @@ interface ApiWallPaperService {
     @GET("curated")
     fun getListPhoto(
         @Query("page") page : Int,
-        @Query("per_page") per_page : Int = 50,
+        @Query("per_page") per_page : Int,
     ) : Observable<CuratedPhotosModel>
 
     @Headers("Authorization: $KEY_API")
     @GET("search")
     fun searchListPhoto(
         @Query("query") query: String,
-        @Query("page") page : Int = 1,
+        @Query("page") page : Int ,
         @Query("per_page") per_page : Int = 500,
     ) : Observable<SearchPhotosModel>
 }

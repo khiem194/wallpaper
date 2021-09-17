@@ -2,31 +2,32 @@ package com.kdnt.wallpaper.ui.home
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.kdnt.wallpaper.core.base.BaseViewModel
-import com.kdnt.wallpaper.data.model.CuratedPhotosModel
 import com.kdnt.wallpaper.data.model.PhotoModel
 import com.kdnt.wallpaper.data.repository.WallPaperRepository
-import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.random.Random
 
 class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : BaseViewModel() {
     init {
-        getListPhoto(1)
+        getListPhoto(1, 40)
+        getListPhotoPopular("Popular", 1)
+        getListPhotoTrending("trending", 1)
     }
 
     private val mListPhotoData: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
     fun getListPhotoLiveData() = mListPhotoData
-    private val mLoadMoreData: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
-    fun getListPhotoLoadMoreLiveData() = mLoadMoreData
 
-     private fun getListPhoto(page : Int) {
+    private val mListPhotoPopular: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
+    fun getListPhotoPopularLiveData() = mListPhotoPopular
+
+    private val mListPhotoTrending: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
+    fun getListPhotoTrendingLiveData() = mListPhotoTrending
+
+    private fun getListPhoto(page: Int, per_page: Int) {
         GlobalScope.launch {
-            wallPaperRepository.getListPhoto(page)
+            wallPaperRepository.getListPhoto(page, per_page)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     val listPhotosModel = it.photos
@@ -36,9 +37,9 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
         }
     }
 
-     fun loadMoreData(page : Int){
+    fun loadMoreData(page: Int, per_page: Int) {
         GlobalScope.launch {
-            wallPaperRepository.getListPhoto(page)
+            wallPaperRepository.getListPhoto(page, per_page)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     val listPhotosModel = it.photos
@@ -49,15 +50,41 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
     }
 
 
-    fun searchListPhoto(name: String) {
+    private fun getListPhotoPopular(name: String, page: Int) {
         GlobalScope.launch {
-            wallPaperRepository.searchListPhoto(name)
+            wallPaperRepository.searchListPhoto(name, page)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     val loadMorePhoto = it.photos
-                    mLoadMoreData.postValue(loadMorePhoto)
+                    mListPhotoPopular.postValue(loadMorePhoto)
                     Log.d("----", it.photos.toString())
                 }
         }
     }
+
+    fun loadMoreDataByName(name: String, page: Int) {
+        GlobalScope.launch {
+            wallPaperRepository.searchListPhoto(name, page)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    val listPhotosModel = it.photos
+                    mListPhotoPopular.postValue(listPhotosModel)
+                    Log.d("----", it.photos.toString())
+                }
+        }
+    }
+
+
+    private fun getListPhotoTrending(name: String, page: Int) {
+        GlobalScope.launch {
+            wallPaperRepository.searchListPhoto(name, page)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    val loadMorePhoto = it.photos
+                    mListPhotoTrending.postValue(loadMorePhoto)
+                    Log.d("----", it.photos.toString())
+                }
+        }
+    }
+
 }

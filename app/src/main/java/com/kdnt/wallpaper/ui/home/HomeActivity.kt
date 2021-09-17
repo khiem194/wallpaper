@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kdnt.wallpaper.R
 import com.kdnt.wallpaper.WallpaperUtils
 import com.kdnt.wallpaper.core.base.BaseActivity
@@ -17,17 +18,11 @@ import com.kdnt.wallpaper.databinding.ActivityHomeBinding
 import com.kdnt.wallpaper.ui.download.DownloadActivity
 import com.kdnt.wallpaper.ui.favourites.FavouritesActivity
 import com.kdnt.wallpaper.ui.home.adapter.PhotosAdapter
+import com.kdnt.wallpaper.ui.home.adapter.ViewPagerAdapter
 import com.kdnt.wallpaper.ui.setwallpaper.SetWallpaperActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
-    private lateinit var mAdapter: PhotosAdapter
-    private lateinit var gridLayoutManager: GridLayoutManager
-    private var currentItems = 0
-    private var scrollOutItem = 0
-    private var totalItemCount = 0
-    private var page = 1
-    private var loading = false
     private lateinit var toggle : ActionBarDrawerToggle
 
     companion object {
@@ -40,16 +35,7 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupDrawerLayout()
-        gridLayoutManager = GridLayoutManager(this, 3)
-        mViewBinding.rcvPhotos.layoutManager = gridLayoutManager
-        mAdapter = PhotosAdapter()
-        mViewBinding.rcvPhotos.adapter = mAdapter
-        mViewModel.getListPhotoLiveData().observe(this, {
-            mAdapter.setData(it)
-            Log.d("---a-", it.toString())
-        })
-        mAdapter.onClickItemPhotoModel = this::gotoSetupWallpaperActivity
-        initScroll()
+        initViewPager2WithFragments()
     }
 
     private fun setupDrawerLayout() {
@@ -77,39 +63,21 @@ class HomeActivity : BaseActivity<HomeViewModel, ActivityHomeBinding>() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initScroll() {
-        mViewBinding.rcvPhotos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                loading = true
-            }
+    private fun initViewPager2WithFragments() {
+        mViewBinding.viewpager.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+        val names: Array<String> = arrayOf("Home", "Popular", "Trending", "Category")
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                currentItems = gridLayoutManager.childCount
-                totalItemCount = gridLayoutManager.itemCount
-                scrollOutItem = gridLayoutManager.findFirstVisibleItemPosition()
-                if (loading && (currentItems + scrollOutItem == totalItemCount)) {
-                    loading = false
-                    page += 1
-                    mViewModel.loadMoreData(page)
-                    Log.d("---b", (page).toString())
-                }
-            }
-        })
+        TabLayoutMediator(mViewBinding.tabLayout, mViewBinding.viewpager) { tab, position ->
+            tab.text = names[position]
+        }.attach()
     }
 
+//    private fun searchListPhoto(name: String) {
+//        mViewModel.searchListPhoto(name)
+//        mViewModel.getListPhotoLiveData().observe(this, {
+//            mAdapter.setData(it)
+//        })
+//    }
 
-    private fun searchListPhoto(name: String) {
-        mViewModel.searchListPhoto(name)
-        mViewModel.getListPhotoLiveData().observe(this, {
-            mAdapter.setData(it)
-        })
-    }
 
-    private fun gotoSetupWallpaperActivity(photoModel: PhotoModel) {
-        val intent = Intent(this, SetWallpaperActivity::class.java)
-        intent.putExtra(WallpaperUtils.KEY_PHOTOS, photoModel)
-        startActivity(intent)
-    }
 }
