@@ -3,6 +3,7 @@ package com.kdnt.wallpaper.ui.home
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.kdnt.wallpaper.core.base.BaseViewModel
+import com.kdnt.wallpaper.data.model.CategoryModel
 import com.kdnt.wallpaper.data.model.PhotoModel
 import com.kdnt.wallpaper.data.repository.WallPaperRepository
 import io.reactivex.schedulers.Schedulers
@@ -24,6 +25,13 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
 
     private val mListPhotoTrending: MutableLiveData<MutableList<PhotoModel>> = MutableLiveData()
     fun getListPhotoTrendingLiveData() = mListPhotoTrending
+
+    private val mListCategory: MutableLiveData<MutableList<CategoryModel>> = MutableLiveData()
+    fun getListCategoryLiveData() = mListCategory
+
+    private fun getListCategory(){
+
+    }
 
     private fun getListPhoto(page: Int, per_page: Int) {
         GlobalScope.launch {
@@ -62,7 +70,7 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
         }
     }
 
-    fun loadMoreDataByName(name: String, page: Int) {
+    fun loadMoreDataPopular(name: String, page: Int) {
         GlobalScope.launch {
             wallPaperRepository.searchListPhoto(name, page)
                 .subscribeOn(Schedulers.io())
@@ -82,6 +90,18 @@ class HomeViewModel(private val wallPaperRepository: WallPaperRepository) : Base
                 .subscribe {
                     val loadMorePhoto = it.photos
                     mListPhotoTrending.postValue(loadMorePhoto)
+                    Log.d("----", it.photos.toString())
+                }
+        }
+    }
+
+    fun loadMoreDataTrending(name: String, page: Int) {
+        GlobalScope.launch {
+            wallPaperRepository.searchListPhoto(name, page)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    val listPhotosModel = it.photos
+                    mListPhotoTrending.postValue(listPhotosModel)
                     Log.d("----", it.photos.toString())
                 }
         }

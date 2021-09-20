@@ -1,10 +1,8 @@
 package com.kdnt.wallpaper.data.model
 
-import android.net.Uri
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.net.URI
 
 @Parcelize
 data class PhotoModel(

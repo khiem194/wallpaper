@@ -34,6 +34,7 @@ class TrendingFragment : BaseFragment<HomeViewModel, FragmentTrendingBinding>() 
         mViewBinding.rcvPhotos.layoutManager = gridLayoutManager
         mAdapter = PhotosAdapter()
         mViewBinding.rcvPhotos.adapter = mAdapter
+        mViewBinding.rcvPhotos.setHasFixedSize(true)
         mViewModel.getListPhotoTrendingLiveData().observe(viewLifecycleOwner, {
             mAdapter.setData(it)
             Log.d("---a-", it.toString())
@@ -57,7 +58,7 @@ class TrendingFragment : BaseFragment<HomeViewModel, FragmentTrendingBinding>() 
                 if (loading && (currentItems + scrollOutItem == totalItemCount)) {
                     loading = false
                     page += 1
-                    mViewModel.loadMoreDataByName("trending", page)
+                    mViewModel.loadMoreDataTrending("trending", page)
                     Log.d("---b", (page).toString())
                 }
             }

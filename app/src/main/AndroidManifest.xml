@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WallPaper">
-        <activity android:name=".ui.download.DownloadActivity"></activity>
+        <activity android:name=".ui.category.CategoryActivity"></activity>
+        <activity android:name=".ui.download.DownloadActivity" />
         <activity android:name=".ui.favourites.FavouritesActivity" />
         <activity android:name=".ui.FavouritesActivity" />
         <activity android:name=".ui.setwallpaper.SetWallpaperActivity" />

@@ -37,7 +37,7 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
 
     override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
         Glide.with(holder.binding.image)
-            .load(mListPhoto[position].src.large)
+            .load(mListPhoto[position].src.large2x)
             .thumbnail(0.1f)
             .transition(DrawableTransitionOptions.withCrossFade(200))
             .dontAnimate()
