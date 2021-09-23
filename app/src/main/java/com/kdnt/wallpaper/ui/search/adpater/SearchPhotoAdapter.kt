@@ -1,4 +1,4 @@
-package com.kdnt.wallpaper.ui.home.adapter
+package com.kdnt.wallpaper.ui.search.adpater
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,25 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.kdnt.wallpaper.data.model.PhotoModel
-import com.kdnt.wallpaper.databinding.ItemLoadingBinding
 import com.kdnt.wallpaper.databinding.ItemWallpaperBinding
 
-
-class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
-    private var mListPhoto = mutableListOf<PhotoModel>()
-    var onClickItemPhotoModel: ((photoModel : PhotoModel) -> Unit)? = null
-
-    fun setData(list: MutableList<PhotoModel>) {
-//        mListPhoto.clear()
-        mListPhoto.addAll(list)
-        notifyDataSetChanged()
-    }
-
-    fun updateData(list: MutableList<PhotoModel>) {
-        mListPhoto.clear()
-        mListPhoto.addAll(list)
-        notifyDataSetChanged()
-    }
+class SearchPhotoAdapter(private val mListPhoto: MutableList<PhotoModel>) :
+    RecyclerView.Adapter<SearchPhotoAdapter.PhotosViewHolder>() {
+    var onClickItemPhotoModel: ((photoModel: PhotoModel) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosViewHolder {
         return PhotosViewHolder(
@@ -37,7 +23,7 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
-        Glide.with(holder.binding.image.context)
+        Glide.with(holder.binding.image)
             .load(mListPhoto[position].src.large)
             .thumbnail(0.1f)
             .transition(DrawableTransitionOptions.withCrossFade(200))

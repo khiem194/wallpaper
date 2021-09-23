@@ -2,6 +2,7 @@ package com.kdnt.wallpaper.di
 
 import com.kdnt.wallpaper.ui.category.CategoryViewModel
 import com.kdnt.wallpaper.ui.home.HomeViewModel
+import com.kdnt.wallpaper.ui.search.SearchViewModel
 import com.kdnt.wallpaper.ui.setwallpaper.SetWallpaperViewModel
 import com.kdnt.wallpaper.ui.splash.SplashViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -13,5 +14,6 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { SetWallpaperViewModel() }
     viewModel { CategoryViewModel(get()) }
+    viewModel { SearchViewModel(get()) }
 
 }

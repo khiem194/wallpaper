@@ -96,6 +96,10 @@ dependencies {
     //audience-network
     implementation 'com.facebook.android:audience-network-sdk:6.5.1'
 
+    //for download
+    implementation 'com.mindorks.android:prdownloader:0.6.0'
+    implementation 'com.karumi:dexter:6.2.3'
+
 
     implementation('com.github.ihsanbal:LoggingInterceptor:2.0.2') {
         exclude group: 'org.json', module: 'json'

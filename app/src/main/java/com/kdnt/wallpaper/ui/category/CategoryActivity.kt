@@ -1,5 +1,6 @@
 package com.kdnt.wallpaper.ui.category
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
@@ -8,8 +9,10 @@ import com.kdnt.wallpaper.R
 import com.kdnt.wallpaper.WallpaperUtils
 import com.kdnt.wallpaper.core.base.BaseActivity
 import com.kdnt.wallpaper.data.model.CategoryModel
+import com.kdnt.wallpaper.data.model.PhotoModel
 import com.kdnt.wallpaper.databinding.ActivityCategoryBinding
 import com.kdnt.wallpaper.ui.home.adapter.PhotosAdapter
+import com.kdnt.wallpaper.ui.setwallpaper.SetWallpaperActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoryActivity : BaseActivity<CategoryViewModel, ActivityCategoryBinding >() {
@@ -39,6 +42,7 @@ class CategoryActivity : BaseActivity<CategoryViewModel, ActivityCategoryBinding
             mAdapter.setData(it)
             Log.d("---a-", it.toString())
         })
+        mAdapter.onClickItemPhotoModel = this::gotoSetupWallpaperActivity
         initScroll(categoryModel.nameCategory)
     }
 
@@ -64,5 +68,10 @@ class CategoryActivity : BaseActivity<CategoryViewModel, ActivityCategoryBinding
         })
     }
 
+    private fun gotoSetupWallpaperActivity(photoModel: PhotoModel) {
+        val intent = Intent(this, SetWallpaperActivity::class.java)
+        intent.putExtra(WallpaperUtils.KEY_PHOTOS, photoModel)
+        startActivity(intent)
+    }
 
 }

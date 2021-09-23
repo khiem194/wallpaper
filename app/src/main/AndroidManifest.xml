@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".WallpaperApplication"
@@ -13,10 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WallPaper">
-        <activity android:name=".ui.category.CategoryActivity"></activity>
+        <activity android:name=".ui.search.SearchActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
+
+        </activity>
+        <activity android:name=".ui.category.CategoryActivity" />
         <activity android:name=".ui.download.DownloadActivity" />
         <activity android:name=".ui.favourites.FavouritesActivity" />
-        <activity android:name=".ui.FavouritesActivity" />
         <activity android:name=".ui.setwallpaper.SetWallpaperActivity" />
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
